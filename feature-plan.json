@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "current_feature": "project-skeleton",
+  "features": [
+    {
+      "id": "project-skeleton",
+      "title": "Project Skeleton with FastAPI and React/Vite",
+      "status": "in_progress",
+      "acceptance": [
+        "FastAPI app runs with health endpoint",
+        "React/Vite frontend builds and serves",
+        "Docker compose with backend, frontend, and Keycloak",
+        "Basic project structure matches contract"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "compression-core",
+      "title": "Core Compression Engine",
+      "status": "planned",
+      "acceptance": [
+        "Deterministic compression algorithms for text, JSON, logs, code",
+        "Token estimation and reduction metrics",
+        "No LLM dependency for core compression"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "api-endpoints",
+      "title": "REST API for Compression Operations",
+      "status": "planned",
+      "acceptance": [
+        "POST /api/compress - compress content",
+        "POST /api/estimate - estimate tokens",
+        "GET /api/history - compression history with pagination",
+        "Authentication required for all endpoints"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "auth-oidc",
+      "title": "OIDC Authentication with Keycloak",
+      "status": "planned",
+      "acceptance": [
+        "SPA PKCE flow with access tokens in memory",
+        "Backend validates JWT with JWKS",
+        "Role-based access control (viewer/operator/admin)",
+        "Login/logout flows work end-to-end"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "frontend-dashboard",
+      "title": "Frontend Dashboard with Compression Workflows",
+      "status": "planned",
+      "acceptance": [
+        "Compression playground with live preview",
+        "History view with search/filter",
+        "Batch compression workflow",
+        "Export results as JSON/CSV"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "mcp-server",
+      "title": "MCP Server for Tool Integration",
+      "status": "planned",
+      "acceptance": [
+        "MCP server exposes compression tools",
+        "Works with Claude Desktop and other MCP clients",
+        "Tools: compress, estimate_tokens, batch_compress"
+      ],
+      "implementation": [],
+      "tests": []
+    },
+    {
+      "id": "docs-and-ci",
+      "title": "Documentation, CI/CD, and Portfolio Metadata",
+      "status": "planned",
+      "acceptance": [
+        "README with architecture diagram and install steps",
+        "CI workflow runs backend/frontend tests and Docker builds",
+        "portfolio.json with correct metadata",
+        "CHANGELOG.md tracking changes"
+      ],
+      "implementation": [],
+      "tests": []
+    }
+  ]
+}

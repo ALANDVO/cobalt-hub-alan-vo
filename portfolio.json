@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "name": "cobalt-hub-alan-vo",
+  "owner": "ALANDVO",
+  "email": "alanvo@gmail.com",
+  "domain": "AI/ML developer tools",
+  "summary": "Work in progress: cobalt-hub-alan-vo",
+  "workflows": [
+    "Compress JSON, code, logs, or text content with configurable algorithms and view token savings",
+    "Browse paginated compression history with filtering by content type and algorithm",
+    "Authenticate via OIDC/Keycloak with PKCE or use demo mode for local development"
+  ],
+  "auth": "oidc-keycloak-saml-broker",
+  "llm_providers": [
+    "openai-compatible",
+    "anthropic",
+    "gemini",
+    "ollama"
+  ],
+  "status": "work-in-progress"
+}
