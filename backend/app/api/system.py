@@ -35,6 +35,36 @@ async def database_health() -> dict:
         return {"status": "unhealthy", "database": "disconnected", "error": str(e)}
 
 
+@router.get("/ready")
+async def readiness_check(settings=Depends(get_test_settings)) -> dict:
+    """Readiness check endpoint - verifies app and database are ready."""
+    # Check database
+    db_status = "healthy"
+    db_error = None
+    try:
+        db = await get_database()
+        async with db.session() as conn:
+            await conn.execute("SELECT 1")
+    except Exception as e:
+        db_status = "unhealthy"
+        db_error = str(e) if settings.debug else "database connection failed"
+
+    overall_status = "ready" if db_status == "healthy" else "not ready"
+
+    return {
+        "status": overall_status,
+        "app": settings.app_name,
+        "version": settings.app_version,
+        "environment": settings.environment,
+        "checks": {
+            "database": {
+                "status": db_status,
+                **({"error": db_error} if db_error else {})
+            }
+        }
+    }
+
+
 @router.get("/version")
 async def version(settings=Depends(get_test_settings)) -> dict:
     """Version information."""

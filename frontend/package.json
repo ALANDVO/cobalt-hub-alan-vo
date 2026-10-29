@@ -2,7 +2,11 @@
   "name": "cobalt-hub-frontend",
   "version": "1.0.0",
   "description": "Cobalt Hub - Frontend for compressing tool outputs before LLM consumption",
-  "author": "Alan Vo <alanvo@gmail.com>",
+  "author": {
+    "name": "Alan Vo",
+    "email": "alanvo@gmail.com",
+    "url": "https://github.com/ALANDVO"
+  },
   "license": "MIT",
   "type": "module",
   "scripts": {
