@@ -72,6 +72,8 @@ async def client(test_db: Database) -> AsyncGenerator[AsyncClient, None]:
     import app.api.auth as auth_api_mod
     import app.api.compression as compress_api_mod
     import app.api.system as system_api_mod
+    import app.core.database as database_mod
+    import app.core.config as config_mod
     from app.core.config import get_settings
     from app.api.system import get_test_settings as system_get_test_settings
     from app.api.auth import get_test_settings as auth_get_test_settings
@@ -89,6 +91,11 @@ async def client(test_db: Database) -> AsyncGenerator[AsyncClient, None]:
 
     fastapi_app.dependency_overrides[get_database] = override_get_database
     fastapi_app.dependency_overrides[get_settings] = override_get_settings
+    
+    # Reset global database instance
+    database_mod._db = None
+    # Patch get_settings in database module
+    database_mod.get_settings = override_get_settings
     fastapi_app.dependency_overrides[system_get_test_settings] = override_get_settings
     fastapi_app.dependency_overrides[auth_get_test_settings] = override_get_settings
     fastapi_app.dependency_overrides[compress_get_test_settings] = override_get_settings

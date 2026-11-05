@@ -1,6 +1,6 @@
 """Authentication API endpoints."""
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status, Header
 from typing import Optional
 from pydantic import BaseModel
 
@@ -103,7 +103,7 @@ async def demo_login(
 
 @router.get("/me", response_model=UserInfo)
 async def get_current_user(
-    authorization: Optional[str] = None,
+    authorization: Optional[str] = Header(None),
     settings=Depends(get_test_settings),
 ) -> UserInfo:
     """Get current user info from access token."""

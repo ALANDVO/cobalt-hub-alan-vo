@@ -12,10 +12,7 @@ from app.api import compression_router, auth_router, system_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager."""
-    # Startup
-    settings = get_settings()
-    db = await get_database()
-    # Database is initialized in get_database()
+    # Startup - database is initialized on first use via get_database()
     yield
     # Shutdown
     await close_database()
