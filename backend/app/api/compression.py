@@ -1,6 +1,6 @@
 """Compression API endpoints."""
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status, Header
 from typing import Optional
 
 from app.core.config import get_settings
@@ -25,7 +25,7 @@ def get_test_settings():
     return get_settings()
 async def get_current_user(
     request: Request,
-    authorization: Optional[str] = None,
+    authorization: Optional[str] = Header(None),
     settings=Depends(get_test_settings),
 ) -> TokenPayload:
     """Extract and validate JWT from Authorization header."""

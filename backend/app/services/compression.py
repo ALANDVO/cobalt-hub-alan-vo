@@ -164,21 +164,28 @@ class CompressionEngine:
         important_lines = []
         for i, line in enumerate(lines):
             if i < 10 or i >= len(lines) - 10:
-                important_lines.append(line)
+                important_lines.append((i, line))
             elif any(kw in line.upper() for kw in important_keywords):
-                important_lines.append(line)
+                important_lines.append((i, line))
 
         # Deduplicate consecutive identical lines
         deduped = []
         prev = None
-        for line in important_lines:
+        for line_num, line in important_lines:
             if line != prev:
-                deduped.append(line)
+                deduped.append((line_num, line))
                 prev = line
 
         if len(deduped) < len(lines):
             header = f"[Log summarized: {len(lines)} lines → {len(deduped)} lines]\n"
-            return header + '\n'.join(deduped)
+            # Include line numbers for non-context lines
+            formatted = []
+            for idx, (line_num, line) in enumerate(deduped):
+                if idx < 10 or idx >= len(deduped) - 10:
+                    formatted.append(line)
+                else:
+                    formatted.append(f"Line {line_num}: {line}")
+            return header + '\n'.join(formatted)
         return content
 
     def _deduplicate(self, content: str) -> str:
@@ -211,7 +218,7 @@ class CompressionEngine:
     def _semantic_merge(self, content: str) -> str:
         """Merge semantically similar lines (basic implementation)."""
         lines = content.split('\n')
-        if len(lines) <= 10:
+        if len(lines) <= 3:
             return content
 
         # Group similar lines by first few words
@@ -229,7 +236,7 @@ class CompressionEngine:
             j = i + 1
             while j < len(lines) and len(similar) < 5:
                 next_line = lines[j].strip()
-                if next_line and self._similar_prefix(current, next_line, 3):
+                if next_line and self._similar_prefix(current, next_line, 2):
                     similar.append(next_line)
                     j += 1
                 else:
@@ -244,10 +251,10 @@ class CompressionEngine:
         return '\n'.join(merged)
 
     def _similar_prefix(self, a: str, b: str, word_count: int) -> bool:
-        """Check if two lines have similar prefix."""
+        """Check if two lines have similar prefix (at least word_count words match)."""
         a_words = a.split()[:word_count]
         b_words = b.split()[:word_count]
-        return a_words == b_words and len(a_words) == word_count
+        return a_words == b_words and len(a_words) >= word_count
 
     def _compress_conservative(self, content: str, content_type: ContentType) -> str:
         """Conservative compression: trim whitespace only."""
