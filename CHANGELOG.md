@@ -53,3 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PKCE enforcement for SPA flow
 - HttpOnly cookie alternative documented
 - Demo mode explicitly opt-in, localhost-bound
+
+---
+
+Alan Vo · [alanvo.net](https://alanvo.net)

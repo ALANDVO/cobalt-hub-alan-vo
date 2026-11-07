@@ -310,3 +310,7 @@ MIT License — Copyright (c) 2024 Alan Vo <alanvo@gmail.com>
 ## Reference
 
 Inspired by [headroomlabs-ai/headroom](https://github.com/headroomlabs-ai/headroom) — original compression concepts adapted and reimplemented independently.
+
+---
+
+Alan Vo · [alanvo.net](https://alanvo.net)

@@ -76,3 +76,6 @@ Acceptance:
 - portfolio.json with correct metadata
 - CHANGELOG.md tracking changes
 
+---
+
+Alan Vo · [alanvo.net](https://alanvo.net)
