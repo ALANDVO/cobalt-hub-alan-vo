@@ -5,7 +5,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider, useAuthStore } from '../hooks/useAuth';
 import { useCompression } from '../hooks/useCompression';
-import { useToastStore } from '../hooks/useToast';
+import { useToastStore, useToast } from '../hooks/useToast';
 import CompressionPage from '../pages/CompressionPage';
 import DashboardPage from '../pages/DashboardPage';
 
@@ -23,6 +23,8 @@ vi.mock('../api/client', () => ({
     getUserInfo: vi.fn(),
     logout: vi.fn(),
     health: vi.fn(),
+    setToken: vi.fn(),
+    clearToken: vi.fn(),
   },
 }));
 
@@ -155,16 +157,20 @@ describe('Compression Hook', () => {
 describe('Toast Hook', () => {
   beforeEach(() => {
     useToastStore.setState({ toasts: [] });
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('adds and removes toasts', () => {
-    const { result } = renderHook(() => useToastStore());
-    const id = act(() => result.current.addToast({ type: 'success', title: 'Test' }));
-    expect(result.current.toasts).toHaveLength(1);
-    expect(result.current.toasts[0].title).toBe('Test');
+    const id = useToastStore.getState().addToast({ type: 'success', title: 'Test', duration: 10000 });
+    expect(useToastStore.getState().toasts).toHaveLength(1);
+    expect(useToastStore.getState().toasts[0].title).toBe('Test');
 
-    act(() => result.current.removeToast(id));
-    expect(result.current.toasts).toHaveLength(0);
+    useToastStore.getState().removeToast(id);
+    expect(useToastStore.getState().toasts).toHaveLength(0);
   });
 
   it('useToast provides convenience methods', () => {

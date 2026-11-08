@@ -10,13 +10,17 @@ project-skeleton
 
 ### project-skeleton — Project Skeleton with FastAPI and React/Vite
 
-Status: in_progress
+Status: done
 
 Acceptance:
 - FastAPI app runs with health endpoint
 - React/Vite frontend builds and serves
 - Docker compose with backend, frontend, and Keycloak
 - Basic project structure matches contract
+
+Implementation: `backend/app/main.py`, `backend/app/api/system.py`, `backend/app/api/auth.py`, `backend/app/api/compression.py`, `backend/app/core/config.py`, `backend/app/core/security.py`, `backend/app/core/database.py`, `backend/app/services/compression.py`, `backend/app/services/history.py`, `backend/app/services/audit.py`, `backend/app/models/compression.py`, `frontend/src/App.tsx`, `frontend/src/main.tsx`, `frontend/src/hooks/useAuth.tsx`, `frontend/src/hooks/useCompression.ts`, `frontend/src/hooks/useToast.tsx`, `frontend/src/api/client.ts`, `frontend/src/pages/CompressionPage.tsx`, `frontend/src/pages/DashboardPage.tsx`, `frontend/src/pages/HistoryPage.tsx`, `frontend/src/pages/LoginPage.tsx`, `frontend/src/pages/SettingsPage.tsx`, `frontend/src/pages/CallbackPage.tsx`, `docker-compose.yml`, `backend/Dockerfile`, `frontend/Dockerfile`, `keycloak/realm.json`
+
+Tests: `backend/tests/test_main.py`, `frontend/src/test/app.test.tsx`
 
 ### compression-core — Core Compression Engine
 
