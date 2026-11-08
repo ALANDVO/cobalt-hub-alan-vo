@@ -1,8 +1,13 @@
 # Changelog
 
-## 1.2.0 — work-in-progress checkpoint
+## 1.3.0 — work-in-progress checkpoint
 
 Partial code published for continued development. Known issues: STATUS.md.
+
+## 1.2.0 — work-in-progress checkpoint
+### Fixed
+- Frontend test suite: fixed Auth Hook mock (added setToken/clearToken) and Toast Hook test (direct store access to avoid renderHook staleness)
+- All 7 frontend tests and 33 backend tests now pass
 
 ## 1.1.0 — work-in-progress checkpoint
 
