@@ -51,7 +51,7 @@ class CompressionEngine:
         start_time = time.perf_counter()
 
         original_tokens = self.token_counter.count(request.content)
-        compressed_content = self._apply_algorithm(request.content, request.content_type, request.algorithm)
+        compressed_content = self._apply_algorithm(request.content, request.content_type, request.algorithm, request.preserve_structure)
         compressed_tokens = self.token_counter.count(compressed_content)
 
         processing_time_ms = (time.perf_counter() - start_time) * 1000
@@ -78,6 +78,7 @@ class CompressionEngine:
         content: str,
         content_type: ContentType,
         algorithm: CompressionAlgorithm,
+        preserve_structure: bool = True,
     ) -> str:
         """Apply the selected compression algorithm."""
         # Combined strategies
