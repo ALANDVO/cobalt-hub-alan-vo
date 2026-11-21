@@ -83,11 +83,11 @@ class CompressionEngine:
         """Apply the selected compression algorithm."""
         # Combined strategies
         if algorithm == CompressionAlgorithm.AGGRESSIVE:
-            return self._compress_aggressive(content, content_type)
+            return self._compress_aggressive(content, content_type, preserve_structure)
         elif algorithm == CompressionAlgorithm.BALANCED:
-            return self._compress_balanced(content, content_type)
+            return self._compress_balanced(content, content_type, preserve_structure)
         elif algorithm == CompressionAlgorithm.CONSERVATIVE:
-            return self._compress_conservative(content, content_type)
+            return self._compress_conservative(content, content_type, preserve_structure)
 
         # Individual algorithms
         if algorithm == CompressionAlgorithm.TRIM_WHITESPACE:
@@ -257,32 +257,34 @@ class CompressionEngine:
         b_words = b.split()[:word_count]
         return a_words == b_words and len(a_words) >= word_count
 
-    def _compress_conservative(self, content: str, content_type: ContentType) -> str:
+    def _compress_conservative(self, content: str, content_type: ContentType, preserve_structure: bool = True) -> str:
         """Conservative compression: trim whitespace only."""
         return self._trim_whitespace(content)
 
-    def _compress_balanced(self, content: str, content_type: ContentType) -> str:
+    def _compress_balanced(self, content: str, content_type: ContentType, preserve_structure: bool = True) -> str:
         """Balanced compression: type-appropriate optimization."""
-        if content_type == ContentType.JSON:
-            content = self._minify_json(content)
-        elif content_type == ContentType.CODE:
-            content = self._minify_code(content)
-        elif content_type == ContentType.LOG:
-            content = self._log_summarize(content)
+        if preserve_structure:
+            if content_type == ContentType.JSON:
+                content = self._minify_json(content)
+            elif content_type == ContentType.CODE:
+                content = self._minify_code(content)
+            elif content_type == ContentType.LOG:
+                content = self._log_summarize(content)
         content = self._trim_whitespace(content)
         return content
 
-    def _compress_aggressive(self, content: str, content_type: ContentType) -> str:
+    def _compress_aggressive(self, content: str, content_type: ContentType, preserve_structure: bool = True) -> str:
         """Aggressive compression: all applicable transformations."""
-        content = self._remove_comments(content, content_type)
-        if content_type == ContentType.JSON:
-            content = self._minify_json(content)
-        elif content_type == ContentType.CODE:
-            content = self._minify_code(content)
-        elif content_type == ContentType.LOG:
-            content = self._log_summarize(content)
-        content = self._deduplicate(content)
-        content = self._semantic_merge(content)
+        if preserve_structure:
+            content = self._remove_comments(content, content_type)
+            if content_type == ContentType.JSON:
+                content = self._minify_json(content)
+            elif content_type == ContentType.CODE:
+                content = self._minify_code(content)
+            elif content_type == ContentType.LOG:
+                content = self._log_summarize(content)
+            content = self._deduplicate(content)
+            content = self._semantic_merge(content)
         content = self._trim_whitespace(content)
         return content
 
