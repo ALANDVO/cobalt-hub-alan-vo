@@ -119,20 +119,34 @@ class CompressionEngine:
         return '\n'.join(lines)
 
     def _remove_comments(self, content: str, content_type: ContentType) -> str:
-        """Remove comments based on content type."""
+        # Remove comments based on content type; MARKDOWN handles headers and inline #
         if content_type == ContentType.CODE:
-            # Remove single-line comments (//, #, --)
-            content = re.sub(r'//.*$', '', content, flags=re.MULTILINE)
-            content = re.sub(r'#.*$', '', content, flags=re.MULTILINE)
-            content = re.sub(r'--.*$', '', content, flags=re.MULTILINE)
-            # Remove multi-line comments (/* */)
-            content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
+            content = re.sub(r"//.*$", "", content, flags=re.MULTILINE)
+            content = re.sub(r"#.*$", "", content, flags=re.MULTILINE)
+            content = re.sub(r"--.*$", "", content, flags=re.MULTILINE)
+            content = re.sub(r"/\*.*?\*/", "", content, flags=re.DOTALL)
         elif content_type == ContentType.JSON:
-            # JSON doesn't officially support comments, but some parsers do
-            content = re.sub(r'//.*$', '', content, flags=re.MULTILINE)
-            content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
+            content = re.sub(r"//.*$", "", content, flags=re.MULTILINE)
+            content = re.sub(r"/\*.*?\*/", "", content, flags=re.DOTALL)
         elif content_type == ContentType.YAML:
-            content = re.sub(r'#.*$', '', content, flags=re.MULTILINE)
+            content = re.sub(r"#.*$", "", content, flags=re.MULTILINE)
+        elif content_type == ContentType.MARKDOWN:
+            # Remove markdown headers (#, ##, ###, etc.) at line start
+            content = re.sub(r"^(#+\s*)", "", content, flags=re.MULTILINE)
+            # Remove inline # comments (not inside code blocks)
+            lines = content.split("\n")
+            cleaned_lines = []
+            for line in lines:
+                stripped = line.lstrip()
+                if stripped.startswith("#") or (len(stripped) > 1 and stripped[1] == " " and not stripped.startswith("  #")):
+                    hash_pos = line.find("#")
+                    if hash_pos >= 0:
+                        if hash_pos == 0:
+                            line = ""
+                        elif line[hash_pos - 1] == " " and not line.startswith("  #"):
+                            line = line[:hash_pos].rstrip()
+                cleaned_lines.append(line)
+            content = "\n".join(cleaned_lines)
         return content
 
     def _minify_json(self, content: str) -> str:
@@ -270,6 +284,10 @@ class CompressionEngine:
                 content = self._minify_code(content)
             elif content_type == ContentType.LOG:
                 content = self._log_summarize(content)
+            elif content_type == ContentType.MARKDOWN:
+                # Remove markdown headers and trim whitespace
+                content = self._remove_comments(content, ContentType.MARKDOWN)
+                content = self._trim_whitespace(content)
         content = self._trim_whitespace(content)
         return content
 
@@ -283,6 +301,11 @@ class CompressionEngine:
                 content = self._minify_code(content)
             elif content_type == ContentType.LOG:
                 content = self._log_summarize(content)
+            elif content_type == ContentType.MARKDOWN:
+                # Remove markdown headers, deduplicate, semantic merge
+                content = self._remove_comments(content, ContentType.MARKDOWN)
+                content = self._deduplicate(content)
+                content = self._semantic_merge(content)
             content = self._deduplicate(content)
             content = self._semantic_merge(content)
         content = self._trim_whitespace(content)
